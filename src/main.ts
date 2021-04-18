@@ -27,9 +27,13 @@ import VueDraggableResizable from 'vue-draggable-resizable'
 // @ts-ignore
 import VueResizable from 'vue-resizable'
 
+// @ts-ignore
+import VueSplit from 'vue-split-panel'
+Vue.use(VueSplit)
+
+
 // const VueResizable = require('vue-resizable')
 Vue.component('vue-resizable', VueResizable)
-
 Vue.component('vue-draggable-resizable', VueDraggableResizable)
 
 
