@@ -63,6 +63,7 @@ export default {
 
     editor.$blockScrolling = Infinity;
     editor.setOption("enableEmmet", true);
+    editor.getSession().setUseWorker(false);
     editor.setOption("maxLines", 15);
     editor.getSession().setMode(`ace/mode/${lang}`);
     editor.setTheme(`ace/theme/${theme}`);
