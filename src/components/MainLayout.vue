@@ -1,21 +1,34 @@
 <template>
   <div id="test100">
     <v-app-bar ref="getParentWidth"></v-app-bar>
+    <!--    {{ highlight }}-->
+    <!--    <div v-html="highlight"></div>-->
     <Split :style="{height: contentHeight + 'px'}">
       <SplitArea :size="25">
+        <v-container style="background-color: red">
+          <!--          <div>aaa</div>-->
+          <v-text-field
+              label="Solo"
+              placeholder="Placeholder"
+              solo
+              style="margin-bottom: -30px"
+          ></v-text-field>
+        </v-container>
+
         <v-container fluid id="size" :style="{height: contentHeight + 'px'}" class="pa-0 ma-0">
           <v-layout fill-height class="pa-0 ma-0">
-            <v-sheet color="red" class="flex-fill overflow-y-auto pa-0 ma-0"
+            <v-sheet class="flex-fill overflow-y-auto pa-0 ma-0"
                      v-bind="{maxHeight: contentHeight}">
               <v-treeview :items="items"
                           open-on-click hoverable class="pa-0 ma-0">
                 <template v-slot:label="{ item }" class="pa-0 ma-0">
-                  <div @click="onClickButton(item)" style="width:100%; background-color: #00b0ff; margin-left: 0px; padding:10px">
-<!--                    {{ item.name }} aaaaaaaaaaaaaaaaaa-->
-<!--                    <v-card style="margin: 0px; margin-left: 100px; padding: 0px;">-->
-<!--                      <v-card-text>aaaaaaaaaaaaaa</v-card-text>-->
-<!--                    </v-card>-->
-<!--                    <v-btn style="width:100%;" class="flex-fill" color="red">aaaaaaaaaaaaaaaaaaa</v-btn>-->
+                  <div @click="onClickButton(item)"
+                       style="width:100%; margin-left: 0px; padding:10px">
+                    <!--                    {{ item.name }} aaaaaaaaaaaaaaaaaa-->
+                    <!--                    <v-card style="margin: 0px; margin-left: 100px; padding: 0px;">-->
+                    <!--                      <v-card-text>aaaaaaaaaaaaaa</v-card-text>-->
+                    <!--                    </v-card>-->
+                    <!--                    <v-btn style="width:100%;" class="flex-fill" color="red">aaaaaaaaaaaaaaaaaaa</v-btn>-->
                     <div style="margin-left: 100px;">
                       {{ item.name }}
                     </div>
@@ -33,7 +46,20 @@
       <SplitArea :size="75">
         <v-layout fill-height class="pa-0 ma-0">
           <v-sheet color="blue" class="flex-fill">
-            {{this.pageContent}}
+            <Editor v-model="text"
+                    lang="javascript"
+                    theme="monokai"
+                    width="100%"
+                    height="260"></Editor>
+
+            <!--            <div>{{ this.pageContent }}</div>-->
+            <v-textarea
+                solo
+                name="input-7-4"
+                label="Solo textarea"
+                v-model="text"
+            ></v-textarea>
+            <pre v-highlightjs="text"><code class="javascript"></code></pre>
           </v-sheet>
         </v-layout>
       </SplitArea>
@@ -46,13 +72,21 @@
 
 <script>
 
+import hljs from 'highlight.js';
+import MyEditor from "@/components/MyEditor";
+import Editor from "@/components/editor/Editor";
+
 export default {
+  /* eslint-disable vue/no-unused-components */
+
   // el: '#test100',
   name: "MainLayout",
+  components: {Editor, MyEditor},
   data: function () {
     return {
       active: [],
       selected: null,
+      text: '',
       items: [
         {
           id: 0,
@@ -116,7 +150,7 @@ export default {
       //   this.preActive = this.active;
       // }
       // eslint-disable-next-line no-prototype-builtins
-      if (!item.hasOwnProperty('children')){
+      if (!item.hasOwnProperty('children')) {
         this.selected = item;
         console.log(this.selected)
       }
@@ -138,9 +172,17 @@ export default {
     disp: function () {
       return this.active;
     },
-    pageContent: function (){
+    pageContent: function () {
       return this.selected;
-    }
+    },
+    code: function () {
+      let code = ""
+      return code;
+    },
+    // highlight: function() {
+    //   let code = "function() { let a = 100 ; }";
+    //   return hljs.highlightAuto(code).value
+    // }
   },
 }
 </script>
