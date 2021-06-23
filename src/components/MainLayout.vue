@@ -1,25 +1,25 @@
 <template>
   <div id="test100">
-    <v-app-bar ref="getParentWidth"></v-app-bar>
-    <!--    {{ highlight }}-->
-    <!--    <div v-html="highlight"></div>-->
+    <v-app-bar ref="getParentWidth">
+      <v-spacer></v-spacer>
+      <v-btn @click="createNewNote">新規ノート</v-btn>
+    </v-app-bar>
     <Split :style="{height: contentHeight + 'px'}">
       <SplitArea :size="25">
-        <v-container style="background-color: red">
-          <!--          <div>aaa</div>-->
-          <v-text-field
-              label="Solo"
-              placeholder="Placeholder"
-              solo
-              style="margin-bottom: -30px"
-          ></v-text-field>
-        </v-container>
-
         <v-container fluid id="size" :style="{height: contentHeight + 'px'}" class="pa-0 ma-0">
           <v-layout fill-height class="pa-0 ma-0">
             <v-sheet class="flex-fill overflow-y-auto pa-0 ma-0"
                      v-bind="{maxHeight: contentHeight}">
-              <v-treeview :items="items"
+              <v-sheet class="pa-1 ma-1">
+                <!--                <v-text-field-->
+                <!--                    v-model="query"-->
+                <!--                    label="Solo"-->
+                <!--                    placeholder="Placeholder"-->
+                <!--                    solo-->
+                <!--                    style="margin-bottom: -30px"-->
+                <!--                ></v-text-field>-->
+              </v-sheet>
+              <v-treeview :items="items2"
                           open-on-click hoverable class="pa-0 ma-0">
                 <template v-slot:label="{ item }" class="pa-0 ma-0">
                   <div @click="onClickButton(item)"
@@ -44,23 +44,59 @@
         </v-container>
       </SplitArea>
       <SplitArea :size="75">
-        <v-layout fill-height class="pa-0 ma-0">
-          <v-sheet color="blue" class="flex-fill">
-            <Editor v-model="text"
-                    lang="javascript"
-                    theme="monokai"
-                    width="100%"
-                    height="260"></Editor>
+        <v-layout>
+          <v-container>
+            <v-row class="pa-1 ma-1">
+              <v-text-field
+                  v-model="query"
+                  label="Solo"
+                  placeholder="Placeholder"
+                  solo
+                  style="margin-bottom: -30px"
+              ></v-text-field>
+            </v-row>
+<!--            <v-row>-->
+<!--              {{ found }}-->
+<!--            </v-row>-->
+            <v-row v-for="item in found" :key="item.id" class="pa-1 ma-1">
+              <v-card class="pa-3">
+                <v-card-title>{{ item.id }}</v-card-title>
+                <Editor v-model="text"
+                        lang="javascript"
+                        theme="monokai"
+                        :content-size="contentHeight"
+                ></Editor>
+                <pre v-highlightjs="item.name"><code class="javascript"></code></pre>
+                {{ item }}
+              </v-card>
+            </v-row>
+            <!--            <v-row>-->
+            <!--              <Editor v-model="text"-->
+            <!--                      lang="javascript"-->
+            <!--                      theme="monokai"-->
+            <!--                      :content-size="contentHeight"-->
+            <!--              ></Editor>-->
+            <!--            </v-row>-->
+            <!--            <div v-for="item in found" :key="item.id">-->
+            <!--              <v-card>-->
+            <!--                {{item}}-->
+            <!--              </v-card>-->
+            <!--            </div>-->
+          </v-container>
+          <!--          <v-sheet style="background-color: #272822" class="flex-fill">-->
+          <!--          <v-sheet style="background-color: white" class="flex-fill">-->
 
-            <!--            <div>{{ this.pageContent }}</div>-->
-            <v-textarea
-                solo
-                name="input-7-4"
-                label="Solo textarea"
-                v-model="text"
-            ></v-textarea>
-            <pre v-highlightjs="text"><code class="javascript"></code></pre>
-          </v-sheet>
+
+          <!--            <v-textarea-->
+          <!--                no-resize-->
+          <!--                solo-->
+          <!--                name="input-7-4"-->
+          <!--                label="Solo textarea"-->
+          <!--                v-model="text"-->
+          <!--                style="width: 100%"-->
+          <!--            ></v-textarea>-->
+
+          <!--          </v-sheet>-->
         </v-layout>
       </SplitArea>
     </Split>
@@ -72,9 +108,22 @@
 
 <script>
 
-import hljs from 'highlight.js';
 import MyEditor from "@/components/MyEditor";
 import Editor from "@/components/editor/Editor";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const config = require('@/config')
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const factory = require('@/modules/doc_factory')
+
+import path from 'path'
+import Datastore from 'nedb'
+
+import {remote} from 'electron';
+
+// import { DbManager } from ''
+
+
+const {app} = remote; // or `const app = remote.app`
 
 export default {
   /* eslint-disable vue/no-unused-components */
@@ -82,29 +131,16 @@ export default {
   // el: '#test100',
   name: "MainLayout",
   components: {Editor, MyEditor},
+  db: null,
+  dbData: {},
   data: function () {
     return {
+      query: '',
       active: [],
       selected: null,
       text: '',
-      items: [
-        {
-          id: 0,
-          name: 'Item1',
-          children: [
-            {id: 1, name: 'Calendar : app'},
-          ]
-        },
-        {
-          id: 2,
-          name: 'Item2',
-          children: [
-            {id: 3, name: 'Calendar : app'},
-            {id: 4, name: 'Chrome : app'},
-          ]
-        },
-        {name: 'test'}
-      ],
+      items: {},
+      found: [],
       element: Element,
       appBarHeight: 0,
       height: 100,
@@ -118,52 +154,84 @@ export default {
       },
       deep: true
     },
-    active: {
-      handler: function (val, oldVal) {
-        console.log(val, oldVal)
-      },
-      deep: true
+    query: function (val) {
+      console.log(val)
+      this.getSearchedItems();
     }
+    // active: {
+    //   handler: function (val, oldVal) {
+    //     console.log(val, oldVal)
+    //   },
+    //   deep: true
+    // }
+  },
+  created() {
+
+
+    // const file = path.join(app.getPath('userData'), 'data.db')
+    // this.db = new Datastore({filename: file})
+    // console.log(file)
+    // this.db.loadDatabase(function (error) {
+    //   if (error) {
+    //     console.log('FATAL: local database could not be loaded. Caused by: ' + error);
+    //     throw error;
+    //   }
+    //   console.log('INFO: local database loaded successfully.');
+    // });
+    // this.db.find({}, (err, doc) => {
+    //   this.dbData = doc;
+    //   this.items = doc;
+    //   console.log(doc)
+    // })
+
+    // console.log('-----------');
+    // const b = factory.addNew(0);
+    // console.log(b)
+
+    const newdb =
+
+
+
+
+    console.log('-----------')
+    console.log(config.name)
+    console.log(global.config.name)
+    console.log('-----------2')
+
+    // const config = remote.getGlobal('config')
+
   },
   mounted() {
     // 要素の幅を取得するメソッド
     this.onWindowSizeChanged()
     // ユーザーがウィンドウサイズを変更したら実行されるようにする
     window.addEventListener('resize', this.onWindowSizeChanged)
+    this.getSearchedItems()
   },
   methods: {
     onWindowSizeChanged() {
       this.element = this.$refs.getParentWidth.$el
       this.appBarHeight = this.element.clientHeight;
-      // console.log(window.innerHeight)
       this.contentHeight = window.innerHeight - this.appBarHeight
-      console.log(this.contentHeight)
-      //this.width = el.clientWidth
-      // console.log(window.innerWidth, window.outerWidth, window.naturalWidth)
     },
     onClickButton(item) {
-      // if (this.selected === null) {
-      //   this.selected = this.preActive = item;
-      //   // this.preActive = item;
-      //   // this.active = this.preActive;
-      // } else {
-      //   this.preActive = this.active;
-      // }
       // eslint-disable-next-line no-prototype-builtins
       if (!item.hasOwnProperty('children')) {
         this.selected = item;
-        console.log(this.selected)
       }
-      console.log(this.selected)
+    },
+    onClick() {
+      console.log('sasasasa')
+    },
+    getSearchedItems() {
+      this.db.find({name: new RegExp(this.query)}, (err, docs) => {
+        console.log(docs)
+        if (docs) this.found = docs;
+      });
+    },
+    createNewNote() {
+      console.log("a")
     }
-    // onUpdate() {
-    //   if (this.active.length == 0) {
-    //     this.active = this.preActive;
-    //   } else {
-    //     this.preActive = this.active;
-    //   }
-    //   console.log(this.active)
-    // }
   },
   computed: {
     width: function () {
@@ -179,10 +247,11 @@ export default {
       let code = ""
       return code;
     },
-    // highlight: function() {
-    //   let code = "function() { let a = 100 ; }";
-    //   return hljs.highlightAuto(code).value
-    // }
+    searchedItems: function () {
+      return this.db.find({name: `${this.query}`}, function (err, docs) {
+        return docs;
+      });
+    }
   },
 }
 </script>

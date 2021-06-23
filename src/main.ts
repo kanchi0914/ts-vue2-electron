@@ -8,8 +8,17 @@ import path from 'path';
 import {remote} from 'electron';
 const {app} = remote; // or `const app = remote.app`
 
-
 const globalAny:any = global;
+// const config = require('./config')
+
+// @ts-ignore
+global.config = {
+  name: "dasdasdsa!!!!!"
+}
+
+// globalAny.config = {
+//   name: "test!!"
+// }
 
 require("brace/mode/text");
 require("brace/mode/assembly_x86");
@@ -49,6 +58,7 @@ require("brace/mode/vbscript");
 require("brace/mode/xml");
 require("brace/theme/monokai");
 
+console.log('ssssssssq')
 
 Vue.config.productionTip = false;
 
@@ -57,6 +67,7 @@ import jQuery from 'jquery'
 // globalAny.jquery = jQuery
 // globalAny.$ = jQuery
 // globalAny.$ = globalAny.jQuery = require('jquery')
+
 
 import 'highlight.js/styles/default.css'
 

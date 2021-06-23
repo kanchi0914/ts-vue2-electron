@@ -23,12 +23,14 @@ export default {
       type: String,
       default: "100%"
     },
-    readOnly: Boolean
+    readOnly: Boolean,
+    contentSize: Number
   },
   data() {
     return {
       editor: null,
-      contentBackup: ""
+      contentBackup: "",
+      rowNum: 1
     };
   },
   methods: {
@@ -48,6 +50,11 @@ export default {
     },
     lang(val) {
       this.editor.getSession().setMode(`ace/mode/${val}`);
+    },
+    contentSize(val){
+      let rowNum = Math.round(val / this.editor.renderer.lineHeight)
+      this.editor.setOption("minLines", rowNum);
+      this.editor.resize();
     }
   },
   mounted() {
@@ -64,13 +71,15 @@ export default {
     editor.$blockScrolling = Infinity;
     editor.setOption("enableEmmet", true);
     editor.getSession().setUseWorker(false);
-    editor.setOption("maxLines", 15);
+    editor.setOption("maxLines", 10);
+    // editor.setOptions({
+    //   maxLines: Infinity
+    // });
     editor.getSession().setMode(`ace/mode/${lang}`);
     editor.setTheme(`ace/theme/${theme}`);
     editor.setShowPrintMargin(false);
-
     if (!this.readOnly) {
-      editor.setOption("minLines", 15);
+      editor.setOption("minLines", 1);
       editor.setValue(this.value, 1);
     } else {
       editor.setValue(this.code, 1);

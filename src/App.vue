@@ -5,8 +5,8 @@
 <!--      <HelloWorld />-->
 <!--      <TestCom />-->
 <!--      <TestCom3></TestCom3>-->
-      <MainLayout></MainLayout>
-<!--      <TestCom2></TestCom2>-->
+<!--      <MainLayout></MainLayout>-->
+      <TestCom2></TestCom2>
     </v-main>
   </v-app>
 </template>

@@ -1,28 +1,61 @@
 <template>
   <div align="center">
-<!--        <div style="height: 300px; border: 1px solid blue;">-->
-<!--          &lt;!&ndash; add any elements you would like to drag & resize&ndash;&gt;-->
-<!--          <vue-draggable-resizable :parent="true" style="border: 1px solid black;">-->
-<!--            <img src="../assets/logo.png">-->
-<!--            <p>You can drag, you can resize, but you cannot move me outside the parent.</p>-->
-<!--          </vue-draggable-resizable>-->
-<!--        </div>-->
-    <vue-resizable active="['r', 'rb', 'b', 'lb', 'l', 'lt', 't', 'rt']">
-      <div class="resizable-content"></div>
-    </vue-resizable>
+    {{ text }}
   </div>
 </template>
 
 <script>
+// import { dbManager } from "@/modules/db_manager2"
+// import {DBWrapper} from "@/modules/DBWrapper";
+import {DbManager} from "@/modules/db_manager2";
+
 export default {
-name: "TestCom2"
+  name: "TestCom2",
+  data: () => {
+    return {
+      text: 'aaaa',
+      db: null
+    }
+  },
+  created() {
+    console.log('aaa')
+    this.text = 'unkopn'
+
+    const db = new DbManager()
+    const text = db.findAll2()
+    text.exec((err, doc) => {
+      console.log(doc)
+    })
+    // const text = db.findAllSuper()
+    // console.log(text)
+    // this.db = db
+    // text.then(result => {
+    //   this.text = result
+    // })
+    // console.log('1111111111')
+    // this.getBBB()
+
+    // const c = dbManager.getB()
+    // console.log(c)
+
+    //const db = new DBWrapper('mytest2000.db', false)
+  },
+
+  methods: {
+    // getData() {
+    //   console.log('')
+    // },
+    // async getBBB(){
+    //   const res = await this.db.findAllSuper()
+    //   console.log('333333333')
+    //   console.log('-----')
+    //   console.log(res)
+    //   console.log('-----')
+    //   this.text = res;
+    //   console.log('')
+    // }
+  }
+
+
 }
 </script>
-
-<style scoped>
-.resizable-content {
-  height: 100%;
-  width: 100%;
-  background-color: aqua;
-}
-</style>
