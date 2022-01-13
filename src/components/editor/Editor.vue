@@ -39,6 +39,9 @@ export default {
         return `${n}px`;
       }
       return n;
+    },
+    save() {
+      console.log('osarta')
     }
   },
   watch: {
@@ -60,37 +63,37 @@ export default {
   mounted() {
     const vm = this;
     const lang = this.lang || "text";
-    const theme = this.theme || "chrome";
+    const theme = this.theme || "monokai";
 
     require("brace/ext/emmet");
 
     const editor = (vm.editor = ace.edit(this.$el));
 
     this.$emit("init", editor);
-
     editor.$blockScrolling = Infinity;
     editor.setOption("enableEmmet", true);
     editor.getSession().setUseWorker(false);
-    editor.setOption("maxLines", 10);
-    // editor.setOptions({
-    //   maxLines: Infinity
-    // });
+    editor.setOption("maxLines", 100);
     editor.getSession().setMode(`ace/mode/${lang}`);
     editor.setTheme(`ace/theme/${theme}`);
     editor.setShowPrintMargin(false);
+    // editor.setValue('dsdadasdasdasda', 1);
     if (!this.readOnly) {
-      editor.setOption("minLines", 1);
+      // editor.setValue('unkodaisuki')
+      // editor.setOption("minLines", 1);
+
+      // 設定されてない
       editor.setValue(this.value, 1);
     } else {
-      editor.setValue(this.code, 1);
+      // editor.setValue(this.code, 1);
     }
-    editor.setReadOnly(this.readOnly);
-
-    editor.on("change", () => {
-      const content = editor.getValue();
-      vm.$emit("input", content);
-      vm.contentBackup = content;
-    });
+    // editor.setReadOnly(this.readOnly);
+    // editor.setReadOnly(true)
+    // editor.on("change", () => {
+    //   const content = editor.getValue();
+    //   vm.$emit("input", content);
+    //   vm.contentBackup = content;
+    // });
   }
 };
 </script>

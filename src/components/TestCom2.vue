@@ -1,6 +1,7 @@
 <template>
   <div align="center">
     {{ text }}
+    <TopEditor/>
   </div>
 </template>
 
@@ -8,9 +9,13 @@
 // import { dbManager } from "@/modules/db_manager2"
 // import {DBWrapper} from "@/modules/DBWrapper";
 import {DbManager} from "@/modules/db_manager2";
+import {Doc} from "@/modules/doc"
+import Editor from "@/components/editor/Editor";
+import TopEditor from "@/components/TopEditor";
 
 export default {
   name: "TestCom2",
+  components: {TopEditor},
   data: () => {
     return {
       text: 'aaaa',
@@ -18,27 +23,22 @@ export default {
     }
   },
   created() {
-    console.log('aaa')
-    this.text = 'unkopn'
-
-    const db = new DbManager()
-    const text = db.findAll2()
-    text.exec((err, doc) => {
-      console.log(doc)
+    this.db = global.config.db
+    console.log('-----------')
+    this.db.insert(new Doc('test!!!'))
+    this.db.find({}, (e, docs) => {
+      console.log(':::::::')
+      console.log(docs)
+      console.log(':::::::')
     })
-    // const text = db.findAllSuper()
-    // console.log(text)
-    // this.db = db
-    // text.then(result => {
-    //   this.text = result
+    console.log('-----------')
+
+    // const db = new DbManager()
+    // const text = db.findAll2()
+    // text.exec((err, doc) => {
+    //   console.log(doc)
     // })
-    // console.log('1111111111')
-    // this.getBBB()
 
-    // const c = dbManager.getB()
-    // console.log(c)
-
-    //const db = new DBWrapper('mytest2000.db', false)
   },
 
   methods: {

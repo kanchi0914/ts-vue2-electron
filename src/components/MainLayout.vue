@@ -108,7 +108,7 @@
 
 <script>
 
-import MyEditor from "@/components/MyEditor";
+import TopEditor from "@/components/TopEditor";
 import Editor from "@/components/editor/Editor";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const config = require('@/config')
@@ -130,7 +130,7 @@ export default {
 
   // el: '#test100',
   name: "MainLayout",
-  components: {Editor, MyEditor},
+  components: {Editor, TopEditor},
   db: null,
   dbData: {},
   data: function () {
@@ -187,8 +187,6 @@ export default {
     // console.log('-----------');
     // const b = factory.addNew(0);
     // console.log(b)
-
-    const newdb =
 
 
 

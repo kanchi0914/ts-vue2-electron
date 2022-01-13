@@ -11,9 +11,12 @@ const {app} = remote; // or `const app = remote.app`
 const globalAny:any = global;
 // const config = require('./config')
 
+const db = new Nedb<Document>({filename: path.join(app.getPath('home'), 'myTestDb.db'), autoload: true})
+
 // @ts-ignore
 global.config = {
-  name: "dasdasdsa!!!!!"
+  name: "dasdasdsa!!!!!",
+  db:db
 }
 
 // globalAny.config = {
@@ -83,6 +86,7 @@ Vue.use(VueSplit)
 
 // @ts-ignore
 import VueHighlightJS from 'vue-highlightjs'
+import Nedb from "nedb";
 Vue.use(VueHighlightJS)
 
 

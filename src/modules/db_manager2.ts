@@ -9,32 +9,32 @@ interface IUser {
     email: string
 }
 
-interface IDocument {
-    title: string
-    comment: string
-    tags: []
-    createdAt: Date
-    updatedAt: Date
-    text: string
-}
-
-class Document implements IDocument {
-    comment: string;
-    createdAt: Date;
-    tags: [];
-    text: string;
-    title: string;
-    updatedAt: Date;
-
-    constructor(text = '', title =  '', comment = '') {
-        this.text = 'HI!!'
-        this.title = title
-        this.comment = comment
-        this.createdAt = new Date()
-        this.updatedAt = new Date()
-        this.tags = []
-    }
-}
+// interface IDocument {
+//     title: string
+//     comment: string
+//     tags: []
+//     createdAt: Date
+//     updatedAt: Date
+//     text: string
+// }
+//
+// class Document implements IDocument {
+//     comment: string;
+//     createdAt: Date;
+//     tags: [];
+//     text: string;
+//     title: string;
+//     updatedAt: Date;
+//
+//     constructor(text = '', title =  '', comment = '') {
+//         this.text = 'HI!!'
+//         this.title = title
+//         this.comment = comment
+//         this.createdAt = new Date()
+//         this.updatedAt = new Date()
+//         this.tags = []
+//     }
+// }
 
 export class DbManager{
     private db: AsyncNedb<any>
@@ -45,7 +45,8 @@ export class DbManager{
 
     constructor(dbFileName: string = 'testDb.db', isUserData: boolean = false) {
         //const db = isUserData ? new Datastore({filename: dbFileName}) : new Datastore({filename: dbFileName})
-        const db = new AsyncNedb<IDocument>({filename: dbFileName, autoload: true})
+        const db = new AsyncNedb<Document>({filename: dbFileName, autoload: true})
+        // const db2 = new Nedb<IUser>({filename: '', autoload: true})
         // db.loadDatabase(function (error) {
         //     if (error) {
         //         console.log('FATAL: local database could not be loaded. Caused by: ' + error);
@@ -108,11 +109,13 @@ export class DbManager{
     //     })
     // }
     //
-    // insert(doc: any): any {
-    //     this.db.insert(doc, (error) => {
-    //         if (error) console.log(error)
-    //     });
-    // }
+    insert(doc: any): any {
+        this.db.insert(doc)
+        this.db.insert(doc, (error) => {
+            if (error) console.log(error)
+        });
+        this.db.remove({})
+    }
 
     // loadDatabase: (dbFileName: string, isUserData: boolean): Datastore => {
     //     const db = isUserData? new Datastore({filename: dbFileName}) : new Datastore({filename: dbFileName})

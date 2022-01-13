@@ -1,12 +1,13 @@
-
 <template>
   <v-app>
     <v-main>
-<!--      <HelloWorld />-->
-<!--      <TestCom />-->
-<!--      <TestCom3></TestCom3>-->
-<!--      <MainLayout></MainLayout>-->
-      <TestCom2></TestCom2>
+      <v-content>
+        <!--      <HelloWorld />-->
+              <TestCom />
+<!--              <TestCom3></TestCom3>-->
+              <MainLayout></MainLayout>
+        <TestCom2></TestCom2>
+      </v-content>
     </v-main>
   </v-app>
 </template>
