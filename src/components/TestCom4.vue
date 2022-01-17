@@ -1,18 +1,18 @@
 <template>
   <div>
-    helo!!
     <div class="text-center">
       <v-dialog
           v-model="dialog"
+          max-width="1000px"
       >
-        <v-sheet height="800px">
+        <v-sheet height="800px" >
           <v-row class="pa-1 ma-1">
             <v-col cols="8" align-self="center">
-<!--              <div v-if="edit && edit.image.base64">-->
-                <v-card v-if="edit && edit !== undefined && edit.image !==undefined && edit.image.base64">
-                  <v-img v-bind:src="fullName(edit.image)" max-height="600px" contain></v-img>
-                </v-card>
-<!--              </div>-->
+              <!--              <div v-if="edit && edit.image.base64">-->
+              <v-card v-if="edit && edit !== undefined && edit.image !==undefined && edit.image.base64">
+                <v-img v-bind:src="fullName(edit.image)" max-height="600px" contain></v-img>
+              </v-card>
+              <!--              </div>-->
             </v-col>
             <v-col cols="4">
               <v-card>
@@ -81,69 +81,112 @@
 
     <div>
       <v-container>
-        <v-row class="pa-2 ma-2">
-          <!--          <v-text-field placeholder="search"></v-text-field>-->
-          <v-combobox
-              class="ma-2"
-              dense
-              :items="getAA()"
-              placeholder="search"
-              @input="doSearch"
-              v-model="searchWord">
-            <!--              @keyup.enter="doSearch"-->
-          </v-combobox>
-        </v-row>
-      </v-container>
-    </div>
-
-
-    <div>
-      <v-container>
         <v-row>
-          <v-col v-for="work in works" :key="work.path" style="max-width: 300px" align="center"
-                 justify="center">
-            <v-card class="ma-1 pa-1">
-              <!--              <v-btn @click="edit = work; dialog = true">aaaaaa</v-btn>-->
-
-              <!--              <v-textarea rows="1"-->
-              <!--                          auto-grow-->
-              <!--                          outlined-->
-              <!--                          @change="(value) => onChange(value)"-->
-              <!--                          :value="work.title">-->
-              <!--              </v-textarea>-->
-              <!--              <v-text-field class="ma-1 pa-0" label="unko" @change="(value) => onChange(value, work)" :value="work.title"></v-text-field>-->
-              <v-card-title @click="edit = work; dialog = true" v-if="work.author"> [{{ work.author }}]{{
-                  work.title
-                }}
-              </v-card-title>
-              <v-card-title @click="edit = work; dialog = true" v-else> {{ work.title }}</v-card-title>
-              <v-row class="pa-0 ma-0">
-                <v-btn plain depressed icon v-model="work.isFavorite" @click="fab(work)">
-                  <v-icon v-if="!work.isFavorite">mdi-heart</v-icon>
-                  <v-icon v-else color="pink">mdi-heart</v-icon>
-                </v-btn>
-                <v-spacer></v-spacer>
-                <v-card-subtitle>{{ formatDate(work.updatedAt, 'yyyy-MM-dd') }}</v-card-subtitle>
-              </v-row>
-              <v-row class="pa-1 ma-1">
-                <v-spacer></v-spacer>
-                <v-chip v-for="tag in work.tags" :key="tag"
-                        class="ma-2"
-                >
+          <v-col cols="2">
+            <v-row>
+              <h2>
+                Artists:
+              </h2>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-chip class="pa-2 ma-2" v-for="author in authorsList" :key="author">
+                  {{ author }}
+                </v-chip>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-divider></v-divider>
+            </v-row>
+            <v-row>
+              <h2>
+                Tags:
+              </h2>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-chip @click="searchByTag(tag)" class="pa-2 ma-2" v-for="tag in tagList" :key="tag">
                   {{ tag }}
                 </v-chip>
-              </v-row>
+              </v-col>
+            </v-row>
+
+            <!--          <ul>-->
+            <!--            <li v-for="title in titleList">-->
+            <!--              {{ title }}-->
+            <!--            </li>-->
+            <!--          </ul>-->
+          </v-col>
+          <v-col cols="10">
+
+            <div>
+              <v-container>
+                <v-row class="pa-2 ma-2">
+                  <!--          <v-text-field placeholder="search"></v-text-field>-->
+                  <v-combobox
+                      class="ma-2"
+                      dense
+                      :items="getAA()"
+                      placeholder="search"
+                      @input="doSearch"
+                      v-model="searchWord">
+                    <!--              @keyup.enter="doSearch"-->
+                  </v-combobox>
+                </v-row>
+              </v-container>
+            </div>
 
 
-              <div v-if="work.image.base64">
-                <v-img v-bind:src="fullName(work.image)" width="250px"></v-img>
-              </div>
-            </v-card>
+            <div>
+              <v-container>
+                <v-row>
+                  <v-col v-for="work in works" :key="work.path" align="center"
+                         justify="center">
+                    <v-card max-width="400px" class="ma-1 pa-1">
+                      <!--              <v-btn @click="edit = work; dialog = true">aaaaaa</v-btn>-->
+
+                      <!--              <v-textarea rows="1"-->
+                      <!--                          auto-grow-->
+                      <!--                          outlined-->
+                      <!--                          @change="(value) => onChange(value)"-->
+                      <!--                          :value="work.title">-->
+                      <!--              </v-textarea>-->
+                      <!--              <v-text-field class="ma-1 pa-0" label="unko" @change="(value) => onChange(value, work)" :value="work.title"></v-text-field>-->
+                      <v-card-title @click="edit = work; dialog = true" v-if="work.author"> [{{ work.author }}]{{
+                          work.title
+                        }}
+                      </v-card-title>
+                      <v-card-title @click="edit = work; dialog = true" v-else> {{ work.title }}</v-card-title>
+                      <v-row class="pa-0 ma-0">
+                        <v-btn plain depressed icon v-model="work.isFavorite" @click="fab(work)">
+                          <v-icon v-if="!work.isFavorite">mdi-heart</v-icon>
+                          <v-icon v-else color="pink">mdi-heart</v-icon>
+                        </v-btn>
+                        <v-spacer></v-spacer>
+                        <v-card-subtitle>{{ formatDate(work.updatedAt, 'yyyy-MM-dd') }}</v-card-subtitle>
+                      </v-row>
+                      <v-row class="pa-1 ma-1">
+                        <v-spacer></v-spacer>
+                        <v-chip v-for="tag in work.tags" :key="tag"
+                                class="ma-2"
+                        >
+                          {{ tag }}
+                        </v-chip>
+                      </v-row>
+
+
+                      <div v-if="work.image.base64">
+                        <v-img v-bind:src="fullName(work.image)" width="250px"></v-img>
+                      </div>
+                    </v-card>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </div>
           </v-col>
         </v-row>
       </v-container>
     </div>
-
 
     <!--    <ul>-->
     <!--      <li v-for="work in works" :key="work.path">-->
@@ -309,6 +352,17 @@ export default {
     openDir() {
       shell.openPath(this.absPath)
     },
+    searchByTag(tag){
+      const names = fs.readdirSync(this.rootDir)
+      this.works = []
+      this.db.find({ tags: new RegExp(tag)}, (err, docs) => {
+        docs = docs.filter(d => names.includes(d.title))
+        for (const doc of docs) {
+          this.setImage(doc, doc.title)
+          this.works.push(doc)
+        }
+      })
+    },
     doSearch() {
       const names = fs.readdirSync(this.rootDir)
       this.works = []
@@ -440,7 +494,7 @@ export default {
       work.image = image
       this.base = image
     },
-    loadImages(){
+    loadImages() {
       // const images = fs.readdirSync(this.absPath)
 
     },

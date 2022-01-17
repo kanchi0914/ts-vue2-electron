@@ -1,8 +1,6 @@
 <template>
   <div id="test100">
-    <v-app-bar ref="getParentWidth">
-      <v-spacer></v-spacer>
-      <v-btn @click="createNewNote">新規ノート</v-btn>
+    <v-app-bar flat ref="getParentWidth">
     </v-app-bar>
     <Split :style="{height: contentHeight + 'px'}">
       <SplitArea :size="25">
@@ -15,101 +13,15 @@
                 <div v-for="n in 100" :key="n">
                   {{n}}
                 </div>
-                <!--                <v-text-field-->
-                <!--                    v-model="query"-->
-                <!--                    label="Solo"-->
-                <!--                    placeholder="Placeholder"-->
-                <!--                    solo-->
-                <!--                    style="margin-bottom: -30px"-->
-                <!--                ></v-text-field>-->
               </v-sheet>
-              <v-treeview :items="items2"
-                          open-on-click hoverable class="pa-0 ma-0">
-                <template v-slot:label="{ item }" class="pa-0 ma-0">
-                  <div @click="onClickButton(item)"
-                       style="width:100%; margin-left: 0px; padding:10px">
-                    <!--                    {{ item.name }} aaaaaaaaaaaaaaaaaa-->
-                    <!--                    <v-card style="margin: 0px; margin-left: 100px; padding: 0px;">-->
-                    <!--                      <v-card-text>aaaaaaaaaaaaaa</v-card-text>-->
-                    <!--                    </v-card>-->
-                    <!--                    <v-btn style="width:100%;" class="flex-fill" color="red">aaaaaaaaaaaaaaaaaaa</v-btn>-->
-                    <div style="margin-left: 100px;">
-                      {{ item.name }}
-                    </div>
-                  </div>
-                  <!--                  <div @click="active ? $event.stopPropagation() : null" style="width:100%; background-color: #00b0ff">-->
-                  <!--                    {{ item.name }}-->
-                  <!--                  </div>-->
-                </template>
-              </v-treeview>
-              <!--                  <v-card>aaaaaaax</v-card>-->
             </v-sheet>
           </v-layout>
         </v-container>
       </SplitArea>
       <SplitArea :size="75">
-        <v-layout>
-          <v-container>
-            <v-row class="pa-1 ma-1">
-              <v-text-field
-                  v-model="query"
-                  label="Solo"
-                  placeholder="Placeholder"
-                  solo
-                  style="margin-bottom: -30px"
-              ></v-text-field>
-            </v-row>
-<!--            <v-row>-->
-<!--              {{ found }}-->
-<!--            </v-row>-->
-            <v-row v-for="item in items" :key="item.id">
-              {{item}}
-            </v-row>
-            <v-row v-for="item in found" :key="item.id" class="pa-1 ma-1">
-              <v-card class="pa-3">
-                <v-card-title>{{ item.id }}</v-card-title>
-                <Editor v-model="text"
-                        lang="javascript"
-                        theme="monokai"
-                        :content-size="contentHeight"
-                ></Editor>
-                <pre v-highlightjs="item.name"><code class="javascript"></code></pre>
-                {{ item }}
-              </v-card>
-            </v-row>
-            <!--            <v-row>-->
-            <!--              <Editor v-model="text"-->
-            <!--                      lang="javascript"-->
-            <!--                      theme="monokai"-->
-            <!--                      :content-size="contentHeight"-->
-            <!--              ></Editor>-->
-            <!--            </v-row>-->
-            <!--            <div v-for="item in found" :key="item.id">-->
-            <!--              <v-card>-->
-            <!--                {{item}}-->
-            <!--              </v-card>-->
-            <!--            </div>-->
-          </v-container>
-          <!--          <v-sheet style="background-color: #272822" class="flex-fill">-->
-          <!--          <v-sheet style="background-color: white" class="flex-fill">-->
-
-
-          <!--            <v-textarea-->
-          <!--                no-resize-->
-          <!--                solo-->
-          <!--                name="input-7-4"-->
-          <!--                label="Solo textarea"-->
-          <!--                v-model="text"-->
-          <!--                style="width: 100%"-->
-          <!--            ></v-textarea>-->
-
-          <!--          </v-sheet>-->
-        </v-layout>
+        <TestCom4></TestCom4>
       </SplitArea>
     </Split>
-
-    <!--    <v-treeview :items="items" open-on-click hoverable activatable dense></v-treeview>-->
-
   </div>
 </template>
 
@@ -117,6 +29,7 @@
 
 import TopEditor from "@/components/TopEditor";
 import Editor from "@/components/editor/Editor";
+import TestCom4 from "@/components/TestCom4";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const config = require('@/config')
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -138,7 +51,7 @@ export default {
 
   // el: '#test100',
   name: "MainLayout",
-  components: {Editor, TopEditor},
+  components: {Editor, TopEditor, TestCom4},
   // db: null,
   // dbData: {},
   data: function () {
@@ -175,55 +88,7 @@ export default {
     // }
   },
   created() {
-
-    // this.db = global.config.db
-    // this.db = new Nedb<Document>({filename: path.join(app.getPath('home'), 'myTestDb.db'), autoload: true})
-    // console.log('dasdsaddadasddsdadsa')
-    // this.db.find({}, (error, docs) => {
-    //   this.items = docs
-    //   console.log('aaaaaaaaaaaaaaaaaaaaaaaaa')
-    //   console.log(docs)
-    //   console.log('aaaaaaaaaaaaaaaaaaaaaaaaa')
-    // })
-    //
-    // this.db.find({}, (err, users) => {
-    //   console.log('udsafsdfasf')
-    // });
-
-    console.log('+++++++++++++++++++++')
-
-
-
-    // const file = path.join(app.getPath('userData'), 'data.db')
-    // this.db = new Datastore({filename: file})
-    // console.log(file)
-    // this.db.loadDatabase(function (error) {
-    //   if (error) {
-    //     console.log('FATAL: local database could not be loaded. Caused by: ' + error);
-    //     throw error;
-    //   }
-    //   console.log('INFO: local database loaded successfully.');
-    // });
-    // this.db.find({}, (err, doc) => {
-    //   this.dbData = doc;
-    //   this.items = doc;
-    //   console.log(doc)
-    // })
-
-    // console.log('-----------');
-    // const b = factory.addNew(0);
-    // console.log(b)
-
-
-
-
-    console.log('-----------')
-    console.log(config.name)
-    console.log(global.config.name)
-    console.log('-----------2')
-
-    // const config = remote.getGlobal('config')
-
+    console.log('start!')
   },
   mounted() {
     // 要素の幅を取得するメソッド
