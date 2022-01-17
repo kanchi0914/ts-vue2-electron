@@ -11,6 +11,10 @@
             <v-sheet class="flex-fill overflow-y-auto pa-0 ma-0"
                      v-bind="{maxHeight: contentHeight}">
               <v-sheet class="pa-1 ma-1">
+
+                <div v-for="n in 100" :key="n">
+                  {{n}}
+                </div>
                 <!--                <v-text-field-->
                 <!--                    v-model="query"-->
                 <!--                    label="Solo"-->
@@ -58,6 +62,9 @@
 <!--            <v-row>-->
 <!--              {{ found }}-->
 <!--            </v-row>-->
+            <v-row v-for="item in items" :key="item.id">
+              {{item}}
+            </v-row>
             <v-row v-for="item in found" :key="item.id" class="pa-1 ma-1">
               <v-card class="pa-3">
                 <v-card-title>{{ item.id }}</v-card-title>
@@ -119,6 +126,7 @@ import path from 'path'
 import Datastore from 'nedb'
 
 import {remote} from 'electron';
+import Nedb from "nedb";
 
 // import { DbManager } from ''
 
@@ -131,20 +139,21 @@ export default {
   // el: '#test100',
   name: "MainLayout",
   components: {Editor, TopEditor},
-  db: null,
-  dbData: {},
+  // db: null,
+  // dbData: {},
   data: function () {
     return {
       query: '',
       active: [],
       selected: null,
       text: '',
-      items: {},
+      items: null,
       found: [],
       element: Element,
       appBarHeight: 0,
       height: 100,
-      contentHeight: 100
+      contentHeight: 100,
+      db: null
     };
   },
   watch: {
@@ -166,6 +175,23 @@ export default {
     // }
   },
   created() {
+
+    // this.db = global.config.db
+    // this.db = new Nedb<Document>({filename: path.join(app.getPath('home'), 'myTestDb.db'), autoload: true})
+    // console.log('dasdsaddadasddsdadsa')
+    // this.db.find({}, (error, docs) => {
+    //   this.items = docs
+    //   console.log('aaaaaaaaaaaaaaaaaaaaaaaaa')
+    //   console.log(docs)
+    //   console.log('aaaaaaaaaaaaaaaaaaaaaaaaa')
+    // })
+    //
+    // this.db.find({}, (err, users) => {
+    //   console.log('udsafsdfasf')
+    // });
+
+    console.log('+++++++++++++++++++++')
+
 
 
     // const file = path.join(app.getPath('userData'), 'data.db')
@@ -229,6 +255,9 @@ export default {
     },
     createNewNote() {
       console.log("a")
+      this.db.find({}, (err, users) => {
+        console.log('udsafsdfasf')
+      });
     }
   },
   computed: {

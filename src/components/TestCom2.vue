@@ -1,6 +1,9 @@
 <template>
   <div align="center">
     {{ text }}
+    <div>
+      ------------------------
+    </div>
     <TopEditor/>
   </div>
 </template>

@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import * as fs from "fs"
 import $ from 'jquery';
 
 export default {
@@ -55,6 +56,11 @@ export default {
       maxHeight: 100,
       minWidth: 50,
       maxWidth: 400
+    })
+    fs.readdir('/', (err, docs) => {
+      console.log('dsadas')
+      console.log(docs)
+      console.log('dsadas')
     })
     // $('#divid').funcResizeBox({
     //   isWidthResize: true,

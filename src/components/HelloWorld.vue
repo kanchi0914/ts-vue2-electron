@@ -1,3 +1,4 @@
+
 <template lang="html">
   <div>
     <div id="app-5">
@@ -85,6 +86,7 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable */
 import Vue from "vue";
 // import { app } from 'electron';
 
@@ -115,7 +117,8 @@ export default Vue.extend({
   computed: {
     // a computed getter
     reversedMessage: function () {
-      return this.message.split('').reverse().join('')
+      return ''
+      // return this.message.split('').reverse().join('')
     }
   },
   // computed(): void {
@@ -150,7 +153,10 @@ export default Vue.extend({
 
     const file = path.join(app.getPath('userData'), 'data.db')
     console.log(file)
+    // eslint-disable-line
+
     this.db = new Datastore({filename: file})
+    // eslint-disable-line
     this.db.loadDatabase(function (error: Error) {
       if (error) {
         console.log('FATAL: local database could not be loaded. Caused by: ' + error);
@@ -187,4 +193,5 @@ export default Vue.extend({
     }
   }
 });
+/* eslint-enable */
 </script>

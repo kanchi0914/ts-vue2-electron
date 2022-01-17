@@ -12867,6 +12867,11 @@ vue-cli-plugin-vuetify@~2.3.1:
     semver "^7.1.2"
     shelljs "^0.8.3"
 
+vue-cool-select@^3.5.2:
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/vue-cool-select/-/vue-cool-select-3.5.2.tgz#d1ad160e6807365d351a2e5d505caefa329dba35"
+  integrity sha512-+a5dzyp0RmfiMbW1bnhHFvK2R2nTND6cAO61WkUDCGE29pJ8GbUknBHxJHsA1uZXtGNN/xLEmUQD6wA8aVbKwQ==
+
 vue-drag-resize@^1.5.0-rc3, vue-drag-resize@^1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/vue-drag-resize/-/vue-drag-resize-1.5.1.tgz#4c6e18dfb60cf2c7cbf8152047dcd0ee55e37499"
@@ -12961,6 +12966,11 @@ vue-router@^3.2.0:
   version "3.5.1"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.5.1.tgz#edf3cf4907952d1e0583e079237220c5ff6eb6c9"
   integrity sha512-RRQNLT8Mzr8z7eL4p7BtKvRaTSGdCbTy2+Mm5HTJvLGYSSeG9gDzNasJPP/yOYKLy+/cLG/ftrqq5fvkFwBJEw==
+
+vue-simple-suggest@^1.11.2:
+  version "1.11.2"
+  resolved "https://registry.yarnpkg.com/vue-simple-suggest/-/vue-simple-suggest-1.11.2.tgz#d1b879bd7c9e27d63459984733881d784cda8422"
+  integrity sha512-mduUGE/ZdFjgxoBTz8nv5/IBHwYV8h780z1p282MQBDTvIII+qCSJHim1VxYJ4NbOQhVoB+93tqlwduV41YTcg==
 
 vue-split-panel@^1.0.4:
   version "1.0.4"

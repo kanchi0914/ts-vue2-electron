@@ -2,11 +2,14 @@
   <v-app>
     <v-main>
       <v-content>
+        aaaaaaaaaaaaaaaaaaaaaaaa
         <!--      <HelloWorld />-->
-              <TestCom />
+<!--              <TestCom />-->
+        <TestCom4></TestCom4>
 <!--              <TestCom3></TestCom3>-->
-              <MainLayout></MainLayout>
-        <TestCom2></TestCom2>
+<!--              <MainLayout></MainLayout>-->
+<!--        <FileLoader></FileLoader>-->
+<!--        <TestCom2></TestCom2>-->
       </v-content>
     </v-main>
   </v-app>
@@ -19,6 +22,8 @@ import TestCom from "./components/TestCom.vue"
 import MainLayout from "./components/MainLayout.vue"
 import TestCom2 from "./components/TestCom2.vue"
 import TestCom3 from "./components/TestCom3.vue"
+import TestCom4 from './components/TestCom4.vue'
+// import FileLoader from "./components/FileLoader.vue"
 
 export default Vue.extend({
   /* eslint-disable vue/no-unused-components */
@@ -30,6 +35,8 @@ export default Vue.extend({
     TestCom,
     TestCom2,
     TestCom3,
+    TestCom4,
+    // FileLoader,
     MainLayout
   },
 
