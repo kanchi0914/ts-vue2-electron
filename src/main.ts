@@ -11,7 +11,8 @@ const ipcMain = remote.ipcMain
 const globalAny:any = global;
 // const config = require('./config')
 
-const db = new Nedb<Document>({filename: path.join(app.getPath('home'), 'myTestDb.db'), autoload: true})
+// const db = new Nedb<Document>({filename: path.join(app.getPath('home'), 'myTestDb.db'), autoload: true})
+const db = new Nedb<Document>({filename: path.join(app.getPath('home'), 'myTestDb3.db'), autoload: true})
 
 // @ts-ignore
 global.config = {

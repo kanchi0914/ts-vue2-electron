@@ -5,7 +5,7 @@
           v-model="dialog"
           max-width="1000px"
       >
-        <v-sheet height="800px" >
+        <v-sheet height="800px">
           <v-row class="pa-1 ma-1">
             <v-col cols="8" align-self="center">
               <!--              <div v-if="edit && edit.image.base64">-->
@@ -163,7 +163,7 @@
                           <v-icon v-else color="pink">mdi-heart</v-icon>
                         </v-btn>
                         <v-spacer></v-spacer>
-                        <v-card-subtitle>{{ formatDate(work.updatedAt, 'yyyy-MM-dd') }}</v-card-subtitle>
+                        <v-card-subtitle>{{ formatDate(work.createdAt, 'yyyy-MM-dd') }}</v-card-subtitle>
                       </v-row>
                       <v-row class="pa-1 ma-1">
                         <v-spacer></v-spacer>
@@ -332,10 +332,8 @@ export default {
       }
     },
     allSuggestion() {
-      console.log('-------aaaaaa----------')
-      console.log(this.tagList)
-      console.log(this.getFromMethod())
-      console.log('---------------dasdsa--')
+      // console.log(this.tagList)
+      // console.log(this.getFromMethod())
       return this.titleList.concat(this.authorsList, this.tagList)
     }
   },
@@ -352,10 +350,10 @@ export default {
     openDir() {
       shell.openPath(this.absPath)
     },
-    searchByTag(tag){
+    searchByTag(tag) {
       const names = fs.readdirSync(this.rootDir)
       this.works = []
-      this.db.find({ tags: new RegExp(tag)}, (err, docs) => {
+      this.db.find({tags: new RegExp(tag)}, (err, docs) => {
         docs = docs.filter(d => names.includes(d.title))
         for (const doc of docs) {
           this.setImage(doc, doc.title)
@@ -371,7 +369,6 @@ export default {
       const word = this.searchWord
       this.db.find({$or: [{title: new RegExp(word)}, {author: new RegExp(word)}, {tags: new RegExp(word)}]}, (err, docs) => {
         docs = docs.filter(d => names.includes(d.title))
-        console.log(docs)
         for (const doc of docs) {
           this.setImage(doc, doc.title)
           this.works.push(doc)
@@ -441,24 +438,39 @@ export default {
           this.authors.add(doc.author)
         }
       })
-      const names = fs.readdirSync('S:\\elec_test')
-      for (const name of names) {
-        this.db.find({path: `${name}`}, (err, doc) => {
+      const keys = fs.readdirSync('S:\\elec_test')
+      for (const key of keys) {
+        this.db.find({path: `${key}`}, (err, doc) => {
+          const dirPath = path.join('S:\\elec_test', key)
+          // new doc
           if (doc.length !== 0) {
             const work = doc[0]
-            this.setImage(work, name)
+            this.setImage(work, key)
+            if (!work.createdAt) {
+              fs.stat(dirPath, (err, stats) => {
+                work.createdAt = stats.birthtime
+                this.db.update({path: key}, {$set: {createdAt: stats.birthtime}},
+                    {},
+                    (err, doc) => {
+                      if (!err) console.log('updated date!!')
+                    })
+              })
+            }
             this.works.push(work)
           } else {
-            const work = this.createWork(name)
-            this.setImage(work, name)
-            this.works.push(work)
-            this.db.insert(work, (err, res) => {
-              console.log(res)
+            const work = this.createWork(key)
+            this.setImage(work, key)
+            // 作成日
+            fs.stat(dirPath, (err, stats) => {
+              work.createdAt = stats.birthtime
+              this.works.push(work)
+              this.db.insert(work, (err, res) => {
+                console.log(res)
+              })
             })
           }
         })
       }
-      // this.display()
     },
     sort(dec) {
       const names = fs.readdirSync('S:\\elec_test')
@@ -477,10 +489,10 @@ export default {
         }
       })
     },
-    setImage(work, name) {
+    setImage(work, dirName) {
       let image = {};
-      image.name = name;
-      const dirPath = path.join('S:\\elec_test', name)
+      image.name = dirName;
+      const dirPath = path.join('S:\\elec_test', dirName)
       const images = fs.readdirSync(dirPath)
       const imagePath = path.join(dirPath, images[0])
       console.log(imagePath)
