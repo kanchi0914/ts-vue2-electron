@@ -85,12 +85,22 @@
           <v-col cols="2">
             <v-row>
               <h2>
+                Notes:
+              </h2>
+            </v-row>
+            <v-btn @click="init">all</v-btn>
+            <v-btn>untagged</v-btn>
+            <v-row>
+              <v-divider></v-divider>
+            </v-row>
+            <v-row>
+              <h2>
                 Artists:
               </h2>
             </v-row>
             <v-row>
               <v-col>
-                <v-chip class="pa-2 ma-2" v-for="author in authorsList" :key="author">
+                <v-chip @click="serachByAuthor(author)" class="pa-2 ma-2" v-for="author in authorsList" :key="author">
                   {{ author }}
                 </v-chip>
               </v-col>
@@ -143,18 +153,9 @@
                   <v-col v-for="work in works" :key="work.path" align="center"
                          justify="center">
                     <v-card max-width="400px" class="ma-1 pa-1">
-                      <!--              <v-btn @click="edit = work; dialog = true">aaaaaa</v-btn>-->
-
-                      <!--              <v-textarea rows="1"-->
-                      <!--                          auto-grow-->
-                      <!--                          outlined-->
-                      <!--                          @change="(value) => onChange(value)"-->
-                      <!--                          :value="work.title">-->
-                      <!--              </v-textarea>-->
-                      <!--              <v-text-field class="ma-1 pa-0" label="unko" @change="(value) => onChange(value, work)" :value="work.title"></v-text-field>-->
-                      <v-card-title @click="edit = work; dialog = true" v-if="work.author"> [{{ work.author }}]{{
-                          work.title
-                        }}
+                      <v-card-title @click="edit = work; dialog = true" v-if="work.author"> [{{
+                          work.author
+                        }}]{{ work.title }}
                       </v-card-title>
                       <v-card-title @click="edit = work; dialog = true" v-else> {{ work.title }}</v-card-title>
                       <v-row class="pa-0 ma-0">
@@ -187,7 +188,6 @@
         </v-row>
       </v-container>
     </div>
-
     <!--    <ul>-->
     <!--      <li v-for="work in works" :key="work.path">-->
     <!--        -->
@@ -284,7 +284,7 @@ export default {
   },
   created() {
     this.db = global.config.db
-    this.init()
+    this.init(true)
   },
   computed: {
     base64Url(image) {
@@ -350,6 +350,17 @@ export default {
     openDir() {
       shell.openPath(this.absPath)
     },
+    serachByAuthor(author){
+      const keys = fs.readdirSync(this.rootDir)
+      this.works = []
+      this.db.find({author: author}, (err, docs) => {
+        // docs = docs.filter(d => keys.includes(d.author))
+        for (const doc of docs) {
+          this.setImage(doc, doc.title)
+          this.works.push(doc)
+        }
+      })
+    },
     searchByTag(tag) {
       const names = fs.readdirSync(this.rootDir)
       this.works = []
@@ -411,6 +422,7 @@ export default {
               (err, doc) => {
                 if (!err) console.log('don!')
               })
+          this.authors.add(value)
           break
         case 'tags':
           this.db.update({path: item.path}, {$set: {tags: value}},
@@ -418,6 +430,9 @@ export default {
               (err, doc) => {
                 if (!err) console.log('don_tagss!')
               })
+          for (const tag of value){
+            this.tags.add(tag)
+          }
           break
       }
     },
@@ -429,7 +444,7 @@ export default {
       console.log('bbb')
       console.log(obj)
     },
-    init() {
+    init(isFirst = true) {
       this.db.find({}, (err, docs) => {
         for (const doc of docs) {
           if (!doc.title) continue
@@ -444,19 +459,21 @@ export default {
           const dirPath = path.join('S:\\elec_test', key)
           // new doc
           if (doc.length !== 0) {
-            const work = doc[0]
-            this.setImage(work, key)
-            if (!work.createdAt) {
-              fs.stat(dirPath, (err, stats) => {
-                work.createdAt = stats.birthtime
-                this.db.update({path: key}, {$set: {createdAt: stats.birthtime}},
-                    {},
-                    (err, doc) => {
-                      if (!err) console.log('updated date!!')
-                    })
-              })
+            if (isFirst) {
+              const work = doc[0]
+              this.setImage(work, key)
+              if (!work.createdAt) {
+                fs.stat(dirPath, (err, stats) => {
+                  work.createdAt = stats.birthtime
+                  this.db.update({path: key}, {$set: {createdAt: stats.birthtime}},
+                      {},
+                      (err, doc) => {
+                        if (!err) console.log('updated date!!')
+                      })
+                })
+              }
+              this.works.push(work)
             }
-            this.works.push(work)
           } else {
             const work = this.createWork(key)
             this.setImage(work, key)
